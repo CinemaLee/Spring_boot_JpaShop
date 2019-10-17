@@ -1,0 +1,8 @@
+
+
+# 스프링부트에서는 별도의 설정 없으면 다 메모리모드로 테스트를 돌려버림.
+# 이렇게 테스트용 yml을 해주는게 맞다.
+
+logging:
+  level:
+    org.hibernate.SQL: debug
