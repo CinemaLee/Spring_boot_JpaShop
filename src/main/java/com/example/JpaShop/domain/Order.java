@@ -40,7 +40,7 @@ public class Order {
 
     //==연관관계 편의 메서드==// 연관관계에 있는 애들 사이의 값세팅을 위한 메서드
     // 위치는 두 엔티티중 컨트롤하는 쪽이 들고 있으면 좋음.
-    public void setMember(Member member){ // 오더 랑 멤버중 오더를 이용해 멤버를 컨트롤
+    public void setMember(Member member){ // 오더랑 멤버중 오더를 이용해 멤버를 컨트롤
         this.member = member; // 멤버에도 값 세팅
         member.getOrders().add(this); // 멤버랑 연관관계에 있는 오더에도 값 세팅.
 

@@ -9,7 +9,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 
 @Service // Ctrl + p => 속성 리스트 확인하기
-@Transactional(readOnly = true) // JPA를 활용한 데이터변경은 무적권 트랜잭션안에서 이루어져야함. 그래야 LAZY로딩 등등 이루어짐.
+@Transactional // JPA를 활용한 데이터변경은 무적권 트랜잭션안에서 이루어져야함. 그래야 LAZY로딩 등등 이루어짐.
 public class MemberService { // 비즈니스 로직, 트랜잭션 처리
 
     @Autowired
@@ -18,7 +18,7 @@ public class MemberService { // 비즈니스 로직, 트랜잭션 처리
     /**
      * 회원가입
      */
-    @Transactional
+
     public Long join(Member member){
         validateDuplicateMember(member); // 중복회원 검증
         memberRepository.save(member);
@@ -49,5 +49,13 @@ public class MemberService { // 비즈니스 로직, 트랜잭션 처리
       */
     public Member findOne(Long memberId){
         return memberRepository.findOne(memberId);
+    }
+
+
+
+    // 회원 수정
+    public void update(Long id, String name) {
+        Member member = memberRepository.findOne(id);
+        member.setName(name); // 변경감지. 따로 업데이트 쿼리를 안날려줘도 flush되면서 디비에 반영됨.
     }
 }

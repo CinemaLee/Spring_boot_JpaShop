@@ -5,10 +5,15 @@ spring:
     password:
     driver-class-name: org.h2.Driver
 
+  thymeleaf:
+    prefix: classpath:/templates/
+    suffix: .html
+
 
   jpa:
     hibernate:
       ddl-auto: create  # 요것 덕분에 jpa가 실행될 때 table이 자동 생성됨.
+
     properties:
       hibernate:
 #        show_sql: true
