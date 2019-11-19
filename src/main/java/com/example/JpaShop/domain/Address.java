@@ -1,6 +1,5 @@
 package com.example.JpaShop.domain;
 
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 import javax.persistence.Embeddable;
