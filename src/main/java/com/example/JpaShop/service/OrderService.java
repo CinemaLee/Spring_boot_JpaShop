@@ -4,10 +4,7 @@ import com.example.JpaShop.Repository.ItemRepository;
 import com.example.JpaShop.Repository.MemberRepository;
 import com.example.JpaShop.Repository.OrderRepository;
 import com.example.JpaShop.Repository.OrderSearch;
-import com.example.JpaShop.domain.Delivery;
-import com.example.JpaShop.domain.Member;
-import com.example.JpaShop.domain.Order;
-import com.example.JpaShop.domain.OrderItem;
+import com.example.JpaShop.domain.*;
 import com.example.JpaShop.domain.item.Item;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -43,6 +40,7 @@ public class OrderService {
         // 배송정보 생성
         Delivery delivery = new Delivery();
         delivery.setAddress(member.getAddress());
+        delivery.setStatus(DeliveryStatus.READY);
 
         // 주문상품 생성
         OrderItem orderItem = OrderItem.createOrderItem(item, item.getPrice(), count);
@@ -52,7 +50,7 @@ public class OrderService {
 
         //주문 저장
         orderRepository.save(order); // order만 저장해줘도 cascade속성 때문에 delivery랑 OrderItem은 따로 저장 안해줘도 됨.
-        // 오더만가 오더아이템, 딜리버리의 생명을 관리하고 있기때문에 쓸 수 있따.
+        // 오더만가능. 오더아이템, 딜리버리의 생명을 cascade로 관리하고 있기때문에 쓸 수 있따.
 
 
         return order.getId();

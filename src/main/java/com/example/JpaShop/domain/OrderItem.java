@@ -13,7 +13,7 @@ import javax.persistence.*;
 @NoArgsConstructor(access = AccessLevel.PROTECTED) // 생성메서드 외의 생성방법을 막는다. 다른곳에서 new를 사용할 수 있으니.
 public class OrderItem {
 
-    @Id @GeneratedValue
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "order_item_id")
     private Long id;
 
@@ -28,10 +28,15 @@ public class OrderItem {
     private int orderPrice; // 주문 당시의 가격
     private int count; // 주문 당시의 수량
 
-//    protected OrderItem {
-//
-//    }
 
+
+
+
+    //==연관 관게 편의 메서드==//
+    void setAddOrder(Order order){
+        this.order = order;
+        order.getOrderItems().add(this);
+    }
 
 
 

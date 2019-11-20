@@ -18,7 +18,7 @@ public class InitDb { // 단순 데이터를 넣어놓기 위함.
     private final InitService initService;
 
 
-    @PostConstruct // 애플리케이션 로딩시점에 얘를 넣어주고 싶은거임.
+//    @PostConstruct // 애플리케이션 로딩시점에 얘를 넣어주고 싶은거임.
     public void init() {
         initService.dbInit1();
         initService.dbInit2();

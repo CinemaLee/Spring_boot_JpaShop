@@ -15,7 +15,7 @@ import java.util.List;
 @Getter @Setter
 public abstract class Item { // 아이템을 어디선가 객체생성할 수 없게.
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "item_id")
     private Long id;
 

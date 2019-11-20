@@ -11,17 +11,18 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Entity
-@Table(name="orders")
+@Table(name="orders") // 쿼리와 충돌나는 경우를 방지하기 위해.
 @Getter @Setter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Order {
 
-    @Id @GeneratedValue
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY) // id값 자동 생성 전략. 기본값은 Auto(DB에 맞게 자동 선택)
     @Column(name="order_id") // 컬럼 설정.
     private Long id;
 
-    @OneToMany(mappedBy = "order" , cascade = CascadeType.ALL) // Order를 persist하면 orderItems도 persist해주겠다는 뜻.
-    private List<OrderItem> orderItems = new ArrayList<>(); // 필드에서 초기화 꼭 해주자.
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "member_id") // 포린키가 member가 아니라 member_id로 된다는 뜻.
+    private Member member; // 포린키를 들고 있다는건 컨트롤권을 쥐고있다는 것
 
     @OneToOne(fetch = FetchType.LAZY,cascade = CascadeType.ALL) // X to One => 무조건 LAZY타입으로.
     @JoinColumn(name = "delivery_id") // 1:1에서는 주인을 아무곳에 둬도 되지만 보통 오더를 통해 배송에 접근하니까 오더로 설정.
@@ -32,15 +33,16 @@ public class Order {
     @Enumerated(EnumType.STRING)
     private OrderStatus status; // 주문상태. Enum타입.[ORDER, CANCEL]
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "member_id") // 포린키가 member가 아니라 member_id로 된다는 뜻.
-    private Member member;
+
+
+    @OneToMany(mappedBy = "order" , cascade = CascadeType.ALL) // Order를 persist하면 orderItems도 persist해주겠다는 뜻.
+    private List<OrderItem> orderItems = new ArrayList<>(); // 필드에서 초기화 꼭 해주자.
 
 
 
     //==연관관계 편의 메서드==// 연관관계에 있는 애들 사이의 값세팅을 위한 메서드
     // 위치는 두 엔티티중 컨트롤하는 쪽이 들고 있으면 좋음.
-    public void setMember(Member member){ // 오더랑 멤버중 오더를 이용해 멤버를 컨트롤
+    private void setMember(Member member){ // 오더랑 멤버중 오더를 이용해 멤버를 컨트롤
         this.member = member; // 멤버에도 값 세팅
         member.getOrders().add(this); // 멤버랑 연관관계에 있는 오더에도 값 세팅.
 
@@ -52,12 +54,12 @@ public class Order {
         order.setMember(member);*/
     }
 
-    public void addOrderItem(OrderItem orderItem) { // 오더랑 오더 아이템중 오더를 이용해 컨트롤
-        orderItems.add(orderItem);
-        orderItem.setOrder(this);
-    }
+//    private void addOrderItem(OrderItem orderItem) { // 오더랑 오더 아이템중 오더를 이용해 컨트롤
+//        orderItems.add(orderItem);
+//        orderItem.setOrder(this);
+//    }
 
-    public void setDelivery(Delivery delivery){ // 오더랑 딜리버리중 오더를 이용해 컨트롤
+    private void setDelivery(Delivery delivery){ // 오더랑 딜리버리중 오더를 이용해 컨트롤
         this.delivery=delivery;
         delivery.setOrder(this);
     }
@@ -82,7 +84,8 @@ public class Order {
         order.setMember(member);
         order.setDelivery(delivery);
         for (OrderItem orderItem : orderItems){
-            order.addOrderItem(orderItem);
+            orderItem.setAddOrder(order);
+
         }
 
         order.setStatus(OrderStatus.ORDER);
@@ -111,10 +114,6 @@ public class Order {
             orderItem.cancel();
         }
     }
-
-
-
-
 
 
 
